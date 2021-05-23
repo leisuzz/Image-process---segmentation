@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from skimage import color 
+import skimage.io
+from skimage import morphology
+from skimage import segmentation
+from skimage import measure
+from skimage.filters import sobel
+from skimage.exposure import histogram
+from skimage.color import label2rgb
+from scipy import ndimage as ndi
+from skimage import metrics
+from skimage.metrics import (adapted_rand_error,
+                              variation_of_information,
+                             hausdorff_distance
+                            )
+from skimage.feature import canny
+from skimage.util import img_as_float
+
+%matplotlib inline
+
+# Iput Image
+image = skimage.io.imread('MRI.png')
+img = color.rgb2gray(image)
+
+# Edge enhancement
+edge_sobel = sobel(img)
+img1 = edge_sobel
+
+# Histogram of MRI image
+hist,hist_centers = histogram(img)
+fig, axes = plt.subplots(1,2, figsize =(8, 3))
+axes[0].imshow(img, cmap=plt.cm.gray)
+axes[0].axis('off')
+axes[1].plot(hist_centers, hist, lw=2)
+axes[1].set_title('histogram of gray values')
+
+# Initial Mask
+mask_i = skimage.io.imread('InitialMask.png')
+
+# GT
+gt = skimage.io.imread('GT.png')
+gt1 =sobel(gt)
